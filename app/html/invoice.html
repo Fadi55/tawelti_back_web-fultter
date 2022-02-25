@@ -1,0 +1,160 @@
+<!---<!DOCTYPE html>
+<html>
+
+<head>
+
+
+    <img src="EMM.jpg" width="80" height="40" class="center" style="  margin-bottom:-35px" /> <br>
+    <h5 style="color: blue;text-align: center;"> Tawelty</h5>
+    <hr>
+    <style>
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+
+        }
+
+        .alignleft {
+            float: left;
+        }
+
+        .alignright {
+            float: right;
+        }
+
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td,
+        th {
+            border: 1px solid black;
+            padding: 8px;
+        }
+
+        h2 {
+
+            text-align: center;
+            padding-bottom: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <br>
+    <br>
+    <table style="width:70%;text-align: center;margin-left:120px">
+
+        <tr>
+            <td style="font-weight: bold">Reservation invoice</td>
+
+        </tr>
+
+    </table>
+    <table style="width:30%;text-align: center;margin-left:270px">
+
+        <tr>
+            <td style="font-weight: bold">N° {{this.invoice.id}}</td>
+
+        </tr>
+        <p style="float:right  ;font-weight: bold; ">DATE : {{this.invoice.createdAt}} </p>
+    </table>
+    <br>
+    <br>
+    <table style="width:100%">
+
+        <tr>
+            <td style="font-weight: bold">CODE CLIENT : {{this.id}}</td>
+
+        </tr>
+
+        <tr>
+            <td style="font-weight: bold">Adresse : {{this.email}}</td>
+
+        </tr>
+    </table>
+    <br />
+    <br />
+
+    ​
+    <table>
+        <tr>
+            <th>Article</th>
+            <th>Quantité</th>
+
+        </tr>
+        <tr>
+            <td style="padding:80px">
+                <p style="margin-top:-60px;margin-left:-60px">{{this.invoice.name}}</p>
+            </td>
+            <td>
+                <span style="margin-left:180px">{{this.invoice.qty}}</span>
+            </td>
+            ​
+
+        </tr>
+
+
+    </table>
+    <br />
+    <br />
+
+    ​
+
+    <br>
+    <br> <br> <br> <br> <br> <br> <br>
+
+    <h5 style="  margin-top:50px;float:right;">Signature et cachet
+        <hr>
+    </h5>
+
+</body>
+
+</html>-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Include Bootstrap for styling -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+
+    <style>
+        .qr-code {
+            max-width: 200px;
+            margin: 10px;
+        }
+    </style>
+
+    <title>QR Code Generator</title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="text-center">
+
+            <!-- Get a Placeholder image initially,
+       this will change according to the
+       data entered later -->
+            <h2 style="font-weight: bold;">CODE CLIENT : {{this.id}}</h2>
+            <h2 style="font-weight: bold;">CODE Reservation : {{this.bookwaitseat.ids}}</h2>
+            <h2 style="font-weight: bold;">email : {{this.email}}</h2>
+            <h3 style="font-weight: bold;">code Table:{{this.bookwaitseat.id}}</h3>
+            <h3>Date:{{this.bookwaitseat.debut}}</h3>
+            <h3>Time:{{this.bookwaitseat.debut}}</h3>
+            <h3>guestName:{{this.bookwaitseat.guestName}}</h3>
+            <h2>special Request:{{this.bookwaitseat.other}}</h2>
+            <img src="https://chart.googleapis.com/chart?cht=qr&chl={{this.bookwaitseat.guestName}}{{this.bookwaitseat.debut}}&chs=160x160&chld=L|0"
+                class="qr-code img-thumbnail img-responsive" />
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.js">
+    </script>
+
+</body>
+
+</html>

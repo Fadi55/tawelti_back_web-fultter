@@ -1,26 +1,29 @@
 module.exports = (sequelize, Sequelize) => {
-	const User = sequelize.define('User', {
+	const Event = sequelize.define('Event', {
  
-    googleId: {
-      type: Sequelize.STRING
-    },
-  
-    facebookId: {
-      type: Sequelize.STRING,
-    },
-    
-first_name:{
+     
+name:{
     type: Sequelize.STRING,
 },
-last_name:{
+RestaurantId:{
+    type: Sequelize.INTEGER,
+},
+     
+type:{
     type: Sequelize.STRING,
 },
-email:{
+description:{
     type: Sequelize.STRING,
 },
-password:{
-    type: Sequelize.STRING,
+datedebut:{
+    type: Sequelize.DATE,
+    defaultValue: Sequelize.NOW
 },
+datefin:{
+    type: Sequelize.DATE,
+    defaultValue: Sequelize.NOW
+},
+ 
 createdAt:{
     type: Sequelize.DATE,
     defaultValue: Sequelize.NOW
@@ -31,5 +34,5 @@ updatedAt:{
 }
 });
 
-return User;
+return Event;
 }

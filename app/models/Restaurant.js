@@ -1,5 +1,5 @@
-module.exports = (sequelize, Sequelize) => {
-	const Restaurant = sequelize.define('Restaurant', {
+/*module.exports = (sequelize, Sequelize) => {
+    const Restaurant = sequelize.define('Restaurant', {
  
         
  
@@ -40,4 +40,47 @@ module.exports = (sequelize, Sequelize) => {
 });
 
 return Restaurant;
+}*/
+
+module.exports = (sequelize, Sequelize) => {
+    const Restaurant = sequelize.define('Restaurant', {
+
+        NomResto: {
+            type: Sequelize.STRING,
+        },
+        Description: {
+            type: Sequelize.STRING,
+        },
+        adresse: {
+            type: Sequelize.STRING,
+        },
+        etat: {
+            type: Sequelize.INTEGER,
+        },
+        budget: {
+            type: Sequelize.INTEGER,
+        },
+        temps_ouverture: {
+            type: Sequelize.STRING,
+         
+        },
+        temps_fermeture: {
+            type: Sequelize.STRING,
+            
+        },
+        createdAt: {
+            type: Sequelize.DATE,
+            defaultValue: Sequelize.NOW
+        },
+        updatedAt: {
+            type: Sequelize.DATE,
+            defaultValue: Sequelize.NOW
+        },
+        UserId: {
+            type: Sequelize.INTEGER
+        }
+
+    });
+
+    return Restaurant;
 }

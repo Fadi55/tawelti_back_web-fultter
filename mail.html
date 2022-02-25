@@ -1,0 +1,98 @@
+<html>
+<head>
+<style>
+    .container { 
+      height: 200px;
+      position: relative;
+     
+    }
+     .p{
+     margin-top: 50px
+     }
+    .center {
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+    }
+    .button {
+      background-color: #4CAF50; /* Green */
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+    }
+    
+    .button1 {
+      background-color: white; 
+      color: black; 
+      border: 2px solid #216477;
+    }
+    .button2 {
+      background-color: white; 
+      color: black; 
+      border: 2px solid #8B0000;
+    }
+    .FormatPolice{
+      width: 50%;
+ 
+  
+    
+ position: absolute;
+ top:0;
+ bottom: 0;
+ left: 0;
+ right: 0;
+ 
+ margin: auto;
+    font-family: Open Sans,Lato,Helvetica Neue,Arial,sans-serif;
+    }
+    
+    </style></head>
+    <body>
+    <div class ="FormatPolice">
+     
+    <h2 style="text-align:center"><img style ="border-style: groove;
+      border-radius: 80%;
+      width: 33%;"src="cid:logo" /> </h2>
+    <hr>
+    <h3 style="text-align:center; color:#216477;margin-top: -10px">Votre réservation au restaurant  {{EmailRestaurantName}} est confirmée </h3>
+    <p style="text-align:center; color:#216477;font-size:13px;margin-top: -10px;font-weight: bold">Détails de la réservation</p>
+    <hr style="margin-top: -10px">
+    
+    <p style="text-align:center;">Réservation de<span style="font-weight: bold; color:#00BFFF;"> M/Mme  {{EmailguestName}} 
+    </span> ,le <span style="font-weight: bold;color:#00BFFF;"> {{EmailDateSTARTResv}}
+    a {{EmailTimeSTARTResv}}</span></p>
+    
+    <p style="text-align:center;font-style: italic;">Nombre de couvert réservé : <span style="font-weight: bold;color:#00BFFF;">2</span> </p>
+    
+    <p style="text-align:center;"><span style="font-weight: bold;color:#216477" >Message du Restaurant :</span>
+    test
+    </p>
+    <div class="container">
+      <div class="center" style="text-align:center">
+    <button  class="button button1"><span style="font-weight: bold;color:#216477"> Envoyer un message ......</span> </button>  
+      <hr>
+    <button class="button button1"> <span style="font-weight: bold;color:#216477"> Modifier votre réservation </span></button>
+      <hr>
+    <button class="button button2">
+    <span style="font-weight: bold;color:#8B0000">  Annuler votre réservation </span> </button>
+       </div>
+    </div>
+    <p style="text-align:center; color:#216477;font-size:13px;font-weight: bold">Coordonees du restaurant </p> 
+    <hr style="margin-top: -10px">
+    <p style="text-align:center;;margin-top: 5px">Nom du restaurant : {{EmailRestaurantName}} </p> 
+    <p style="text-align:center;margin-top: -20px">Adresse : {{EmailRestaurantAdresse}} </p>
+    <p style="text-align:center;margin-top: -20px">telephone : 72 201 580  </p> 
+    </div>
+
+  </body>
+
+  </html>

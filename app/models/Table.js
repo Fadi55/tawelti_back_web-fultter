@@ -1,14 +1,33 @@
 module.exports = (sequelize, Sequelize) => {
 	const Table = sequelize.define('Table', {
  
-    Description:{
+    description:{
         type: Sequelize.STRING,
     },
     etat:{
         type: Sequelize.INTEGER,
        
     },
+    ids: {
+        type: Sequelize.UUID,
+        primaryKey: true
+      },
+    id:{
+        type: Sequelize.INTEGER,
+         
+    },
+    tolerance:{
+        type: Sequelize.INTEGER,
+         
+    },
    
+    typeTable:{
+        type: Sequelize.STRING,
+    },
+
+    classIdtable:{
+        type: Sequelize.STRING,
+    },
     createdAt:{
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW
@@ -21,7 +40,39 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.INTEGER,
        
     },
-    
+    ZoneId:{
+        type: Sequelize.INTEGER,
+       
+    },
+    numero:{
+        type: Sequelize.INTEGER,
+       
+    },
+     top:{
+        type: Sequelize.STRING,
+       
+    },
+    left:{
+        type: Sequelize.STRING,
+        field: 'lefts',
+       
+    },
+    text:{
+        type: Sequelize.STRING,
+       
+    },
+    price:{
+        type: Sequelize.STRING,
+       
+    },
+    class:{
+        type: Sequelize.STRING,
+       
+    },
+    class2:{
+        type: Sequelize.STRING,
+       
+    },
     tableNbrPx:{
         type: Sequelize.INTEGER,
        

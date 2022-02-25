@@ -1,26 +1,20 @@
 module.exports = (sequelize, Sequelize) => {
-	const User = sequelize.define('User', {
+	const ClientReservations = sequelize.define('ClientReservations', {
  
-    googleId: {
-      type: Sequelize.STRING
-    },
-  
-    facebookId: {
-      type: Sequelize.STRING,
-    },
-    
-first_name:{
+      
+RestaurantId:{
+    type: Sequelize.INTEGER,
+},
+name:{
     type: Sequelize.STRING,
 },
-last_name:{
+telephone:{
     type: Sequelize.STRING,
 },
 email:{
     type: Sequelize.STRING,
 },
-password:{
-    type: Sequelize.STRING,
-},
+ 
 createdAt:{
     type: Sequelize.DATE,
     defaultValue: Sequelize.NOW
@@ -31,5 +25,5 @@ updatedAt:{
 }
 });
 
-return User;
+return ClientReservations;
 }
