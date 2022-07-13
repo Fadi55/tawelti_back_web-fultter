@@ -1,7 +1,8 @@
 const db = require('../config/db.config.js');
 const General = db.general;
 const Op = db.Sequelize.Op;
-
+ 
+const Restaurant = db.restaurants;
 // Create and Save a new etage
 exports.create = (req, res) => {
     // Validate request
@@ -11,16 +12,21 @@ exports.create = (req, res) => {
         });
         return;
     }*/
+    var container = [];
+    for (i = 0; i < req.body.length; i++) {
+        const book = {
+            type: req.body[i].type,
+            RestaurantId: req.body[i].RestaurantId,
+            checked: req.body[i].checked,
 
-    // Create a etage
-    const general = {
-        type: req.body.type,
-        RestaurantId: req.body.RestaurantId,
-        //published: req.body.published ? req.body.published : false
-    };
+        }
+        container.push(book);
+    }
+
+  
 
     // Save etage in the database
-    General.create(general)
+    General.bulkCreate(container)
         .then(data => {
             res.send(data);
         })
@@ -63,6 +69,27 @@ exports.findOne = (req, res) => {
         });
 };
 
+//get Restauratant with General Parametre
+//get Restaurant with Salles
+exports.findRestaurantlwithGenerale = (req, res) => {
+    const RestaurantId = req.params.id;
+    
+    return Restaurant.findByPk(RestaurantId, { include: ["general"] })
+        .then(restaurant => {
+
+            if (restaurant) {
+       
+ 
+                res.send(restaurant)
+               
+            } else {
+                res.send('restaurant deos not exist')
+
+            }
+        }).catch(err => {
+            res.send('errror: ' + err)
+        })
+}
 
 // Update a etage by the id in the request
 exports.update = (req, res) => {

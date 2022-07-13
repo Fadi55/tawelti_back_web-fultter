@@ -6,28 +6,44 @@ const { tables } = require('../config/db.config.js');
 const Event = db.events;
 const Restaurant = db.restaurants;
   
+const fs = require("fs");
+
+const uploadFiles = async (req, res) => {
+ 
+  };
 //Create Events
 exports.CreateEvent = (req, res) => {
-
-    const event = {
-        name: req.body.name,
-        type: req.body.type,
-        RestaurantId: req.body.RestaurantId,
-    }
-    Event.create(event,req.body)
-        .then(event => {
-
-            if (event) {
-                res.status(200).json(event)
- 
-            } else {
-                res.send('event dont create ')
-
-            }
-        }).catch(err => {
-            res.send('errror: ')
-
-        })
+    try {
+        console.log(req.file,__basedir);
+        console.log(req.body)
+    
+        if (req.file == undefined) {
+          return res.send(`You must select a file.`);
+        }
+    
+        Event.create({
+          RestaurantId:req.body.RestaurantId,
+          nameEvent: req.body.nameEvent,
+          type: req.file.mimetype,
+          namepic: req.file.originalname,
+          data: fs.readFileSync(
+            __basedir + "/uploads/events/" + req.file.filename
+          ),
+        }).then((image) => {
+          fs.writeFileSync(
+            __basedir + "/tmp/events/" + image.name,
+            image.data
+          );
+    
+       
+  
+          return  res.status(201).json(`File has been uploaded.`);
+        });
+      } catch (error) {
+        console.log(error);
+        return res.send(`Error when trying upload images: ${error}`);
+      }
+  
 }
 
 //get event with resto

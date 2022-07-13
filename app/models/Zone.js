@@ -5,8 +5,14 @@ module.exports = (sequelize, Sequelize) => {
 name:{
     type: Sequelize.STRING,
 },
-     
+color:{
+    type: Sequelize.STRING,
+},
 RestaurantId:{
+    type: Sequelize.INTEGER,
+},
+ 
+TableId:{
     type: Sequelize.INTEGER,
 },
  

@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
+ 
   },
   "author": "",
   "license": "ISC",
@@ -34,7 +34,9 @@
     "passport-local": "^1.0.0",
     "pdf-creator-node": "^2.2.4",
     "promise": "^8.1.0",
-    "sequelize": "^4.38.0"
+    "sequelize": "^4.38.0",
+    "nodemon": "^2.0.16",
+    "dotenv": "^6.2.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.7",

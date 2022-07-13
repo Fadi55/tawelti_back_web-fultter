@@ -14,6 +14,7 @@ module.exports = function (app) {
    app.use(passport.initialize());
 app.use(passport.session());
 const clientreservations = require('../controller/clientsreservations');
+const parametremodes = require('../controller/paramtersmode');
    const auth = require('../controller/authentification.js');
    const restaurant = require('../controller/restaurant.js');
    const user = require('../controller/user.js');
@@ -35,6 +36,8 @@ const clientreservations = require('../controller/clientsreservations');
    const etablissement = require('../controller/etablissement.js');
    const ambiance = require('../controller/ambiance.js');
    const general = require('../controller/general.js');
+   
+   const eventdays = require('../controller/eventdays');
    //const adresse = require('../controller/adresse.js');
    const upload = require('../config/multer.config.js');
    const fileWorker = require('../controller/file.js');
@@ -45,6 +48,10 @@ const clientreservations = require('../controller/clientsreservations');
    const avis=require('../controller/avis.js');
    const favorite = require('../controller/favorite.js');
    const evaluation=require('../controller/evaluation.js');
+   const parametre=require('../controller/parametre');
+   const picturePrincipCtrl=require('../controller/Pictureprincip');
+  const uploadFileEvent =require("../middleware/uploadevent");
+   const uploadprofile = require("../middleware/uploadprofile");
 
 //find avis for each user
 app.get('/users/avis/:id', user.findAvisByIdUser);
@@ -154,6 +161,9 @@ app.get('/restaurants/evaluations/:id',restaurant.findEvaluation);
    //general
    app.post("/generals/create", general.create);
    app.get('/generals', general.findAll);
+   
+   
+   app.get('/Restaurant_generals/:id', general.findRestaurantlwithGenerale);
    app.get('/generals/:id', general.findOne);
    app.put('/generals/UpdateGeneral/:id', general.update);
    app.delete("/generals/:id", general.delete);
@@ -192,7 +202,8 @@ app.get('/restaurants/evaluations/:id',restaurant.findEvaluation);
 
    //app.get('/restaurant/show', restaurant.showResto);
 
-
+//USer
+app.post('/users/createUser', user.CreateUser);
    //authentification
    app.post('/users/login', auth.login);
    app.post('/users/register', auth.register);
@@ -225,7 +236,10 @@ app.get('/Client/getClientName/:id', clientreservations.findClientWithName);
    app.delete('/turnvoer/deleteTurnover/:id', turnover.deleteTurnover);
 
    //event
-   app.post('/event/createEvent', event.CreateEvent);
+   
+   app.post('/event/eventDays', eventdays.CreateEventdays);
+
+   app.post("/event/createEvent", uploadFileEvent.single("name"), event.CreateEvent);
    app.get('/event/getEvent/:id', event.findRestaurantlwithEvent);
    app.delete('/event/deleteEvent/:id', event.deleteEvent);
 
@@ -248,7 +262,7 @@ app.get('/Client/getClientName/:id', clientreservations.findClientWithName);
     app.put('/BWS/UpdateConfBookWaitandSeats/:id', BWS.UpdateConfBookWaitandSeat);
     app.put('/BWS/UpdateCancelBookWaitandSeats/:id', BWS.UpdateCancelBookWaitandSeat);
     app.post('/BWS/CreateReservation', BWS.CreateReservation);
-    
+    app.post('/BWS/FinalSansTolerance', BWS.FinalSansTolerance);
     app.post('/BWS/GetALlBookWaitSeatSeated/:id', BWS.findRestaurantlwithBookWaitSeatSeated);
     app.get('/BWS/GetALlBookWaitSeatSeatedCancel/:id', BWS.findRestaurantlwithBookWaitSeatSeatedCancel);
    //toleranceReservation
@@ -264,5 +278,19 @@ app.get('/Client/getClientName/:id', clientreservations.findClientWithName);
    app.post('/data/ambiance', data.addAmbiance);
    app.post('/data/parking', data.addParking);
    app.post('/data/reservation', data.addGeneral);
+   
+//smart
+   app.put('/reservation/mode/:id', parametre.update);
+   app.post('/reservation/mode/:id', parametre.create);
+   
+   app.get("/getParms/:id", parametre.getParam);
+   //mode
+   app.put('/reservation/parametremodes/:id', parametremodes.update);
+   app.get("/getModes/:id", parametremodes.getModes);
+   
+   
+   //ProfileImg
+   app.post("/uploadProfileImg", uploadprofile.single("name"), picturePrincipCtrl.uploadFiles);
+   app.get("/getPicturePrincipal/:id", picturePrincipCtrl.getPicturePrincipal);
 
 }

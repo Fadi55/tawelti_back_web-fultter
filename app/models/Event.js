@@ -1,15 +1,12 @@
 module.exports = (sequelize, Sequelize) => {
 	const Event = sequelize.define('Event', {
  
-     
-name:{
-    type: Sequelize.STRING,
-},
+ 
 RestaurantId:{
     type: Sequelize.INTEGER,
 },
      
-type:{
+nameEvent:{
     type: Sequelize.STRING,
 },
 description:{
@@ -31,7 +28,13 @@ createdAt:{
 updatedAt:{
     type: Sequelize.DATE,
     defaultValue: Sequelize.NOW
-}
+},
+namepic:{
+    type: Sequelize.STRING,
+},
+data:{
+    type: Sequelize.STRING,
+},
 });
 
 return Event;
