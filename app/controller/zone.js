@@ -9,49 +9,35 @@ const Table = db.tables;
 const Restaurant = db.restaurants;
 //Create Zone
 exports.CreateZone = (req, res) => {
+    var container = [];
 
-    const zonedata = {
-        name: req.body[0].name,
-        RestaurantId: req.body[0].RestaurantId,
+    for (i = 0; i < req.body.length; i++) {
+        const book = {
+         
+            RestaurantId: req.body[i].RestaurantId,
+            TableId: req.body[i].TableId,
+            name: req.body[i].name,
+            color: req.body[i].color
+        }
+        container.push(book);
     }
+   
+    Zone.bulkCreate(container)
+       
 
-    console.log("first",req.body)
-    req.body[1].forEach((value2) => {
-        console.log("tyyyyyyy",value2);
-    })
-    Zone.create(zonedata)
-        .then(zonedata => {
+            .then(container => {
 
-            if (zonedata) {
-                res.status(200).json(zonedata)
-                var promises = [];
-                req.body[1].forEach(function(valueups){
-                   promises.push(Table.update({ ZoneId:zonedata.id
-                
-                
-                
-                },{where : {id:valueups.id}}));
-                });
-                Promise.all(promises).then(function(){
-                    res.status(200)
-                }, function(err){
-                    console.log("non")
-                });
-
-            
- 
-            } 
-            
-            
-            else {
-                res.send('zone dont create ')
-
-            }
-        }).catch(err => {
-            res.send('errror: ')
-     
-        })
-
+                if (container) {
+                    res.status(200).json(container)
+    
+                } else {
+                    res.send('book dont create ')
+    
+                }
+            }).catch(err => {
+                res.send('errror: ')
+    
+            })
     
         
 }

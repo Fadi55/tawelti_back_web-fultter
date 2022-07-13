@@ -1,6 +1,8 @@
 module.exports = (sequelize, Sequelize) => {
     const General = sequelize.define('General', {
-
+        checked : {
+            type: Sequelize.BOOLEAN,
+        },
         type: {
             type: Sequelize.STRING,
         },

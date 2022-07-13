@@ -19,6 +19,9 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 db.sequelize = sequelize;
+
+db.pictureprincips = require('../models/PicturePrincip.js')(sequelize, Sequelize);
+db.pictureevents = require('../models/Pictureevent.js')(sequelize, Sequelize);
 db.Clientsreservations = require('../models/ClientsReservations.js')(sequelize, Sequelize);
 db.daysworks = require('../models/Daysworks.js')(sequelize, Sequelize);
 db.events = require('../models/Event.js')(sequelize, Sequelize);
@@ -49,6 +52,11 @@ db.tableblockeds = require('../models/TableBlocked.js')(sequelize, Sequelize);
 db.favorites= require('../models/Favorite.js')(sequelize, Sequelize);
 db.avis=require('../models/Avis.js')(sequelize, Sequelize);
 db.evaluations=require('../models/evaluation.js')(sequelize,Sequelize);
+
+
+db.paramtersreservations=require('../models/ParamtersReservations.js')(sequelize,Sequelize);
+db.aramterscollages=require('../models/ParamtersCollages.js')(sequelize,Sequelize);
+db.paramtersmodes=require('../models/ParamtersMode.js')(sequelize,Sequelize);
 
 db.restaurants.hasMany(db.bookwaitseats, { as: "bookwaitseat" });
 db.bookwaitseats.belongsTo(db.restaurants, {

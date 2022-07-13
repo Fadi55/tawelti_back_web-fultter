@@ -5,7 +5,7 @@ const { restaurants } = require('../config/db.config.js');
 const BookWaitSeat = require('../models/BookWaitSeat.js');
 const User = db.users;
 const Restaurant = db.restaurants;
-
+const bcrypt = require("bcrypt");
 
 //find Restaurant BY ID user
 exports.findRestaurantlByIdUser = (req, res) => {
@@ -86,7 +86,35 @@ exports.findOne = (req, res) => {
             });
         });
 };
+//Create User
+exports.CreateUser = async (req, res) => {
+    
+    if (!req.body.email || !req.body.password) {
+        return res.status(400).json({ 'message': 'name and RestaurantId names are required' });
+    }
 
+    try {
+      
+        const result = await User.create({
+            email: req.body.email,
+            password:  bcrypt.hashSync(req.body.password, 10)
+            
+        });
+
+    
+        res.status(201).json(result);
+        console.log(result.id)
+       
+     
+        req2={"UserId":result.id}
+        Restaurant.update(req2, {
+            where: { id: req.body.idresto }
+        })
+            
+    } catch (err) {
+        console.error(err);
+    }
+}
 // Update user by the id in the request
 exports.update = (req, res) => {
     const id = req.params.id;

@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 const cors = require('cors');
  app.use(cors());
 app.use(bodyParser.json())
-
+global.__basedir = __dirname;
 require('./app/router/router.js')(app);
 /*global.__basedir = __dirname;
 
@@ -19,7 +19,12 @@ let router = require('./app/router/file.router.js');
 app.use(express.static('resources'));
 app.use('/', router);*/
 
-
+const db = require('./app/config/db.config.js');
+  
+// force: true will drop the table if it already exists
+// db.sequelize.sync().then(() => {
+//   console.log('Resync with { force: true }');
+// }); 
 
 
 //require('./app/route/project.route.js')(app);

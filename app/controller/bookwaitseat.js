@@ -443,6 +443,1472 @@ exports.deleteTableBlocked = (req, res) => {
         });
 }
 //
+exports.FinalSansTolerance = async (req, res) => {
+    containerExisteTables = [{}]
+    containerTurnoverReservations = []
+    containerOpenClose = []
+    containerGetTurnoverRestaurant = []
+    containerTablesblocked = []
+    containergetTuronversReservationRestaurents = []
+    containerTables = []
+    containerTableNbrPx = []
+    containerTableNbrPx11 = []
+    resultTablesAvaible = [];
+    containerTableNbrPxvar = [];
+    ObjecTTablesdispo = [{}]
+    var arraytbalesSnasTolernace = []
+    var FianlarraytbalesSansTolernace = []
+    var arraytbalesWithTolernacePlus = []
+    var FinalarraytbalesWithTolernacePlus=[]
+    var arraytbalesWithTolernaceMinus = []
+    var FinalarraytbalesWithTolernaceMinus = []
+    var arraytablesCollageSansTolerance = []
+    var FinalarraytablesCollageSansTolerance = []
+    var arraytablesCollageWithTolerancePlus = []
+    var arraytablesCollageWithToleranceMinus = []
+    var arraytablesCollageWithTolerancePlusMinus = []
+     var checkDayopenClose = []
+    var arrayTurnvoers =[]
+    var arrayTurnoverReservations = []
+    var TablesInBook =[]
+    var FinalarraywithCompmeteSansTolerance= []
+    var FinalarraywithCompmeteToleranceplus = []
+    var FinalarraywithCompmeteToleranceminus = []
+    var out = []
+    var timeend
+    var TablesInBookfilterByDate=[]
+    var testtttt = []
+    var timeNOTok =[]
+    var timeNOTokCollageSansTolerance =[]
+    var timeNOTokCollagePlusTolerance =[]
+    var timeNOTokCollageMinusTolerance =[]
+    var timeNOTokCollagePlusMinusTolerance =[]
+    var timeok=[]
+     var array3=[]
+     var finalcollagze=[]
+    var endtimefinal
+    var idReservation
+    const book = {
+
+        RestaurantId: req.body.RestaurantId,
+        guestnumber: req.body.guestnumber,
+        timebook: req.body.timebook,
+        startTime:req.body.startTime
+    }
+    
+    idReservation=makeid(8)
+    async function getRestaurantOpenClose() {
+       
+        
+        try {
+            let date = new Date(req.body.startTime);
+            let day = date.toLocaleString('en-us', {weekday: 'long'});
+            // console.log("ffffffffff",day);
+            const OpenClose = await Restaurant.findByPk(RestaurantId = req.body.RestaurantId, { include: 'daysworks'})
+            // res.status(200).json(tablesblocked);
+          
+            // TablesInBook= containerOpenClose
+            // res.status(200).json(containerExisteTables);
+            containerOpenClose = OpenClose.daysworks
+            containerOpenClose.forEach((value) => {
+
+           if(value.day === day ){
+            checkDayopenClose = value
+     
+           }
+
+            })
+                // console.log("asynco", req.body.startTime)
+               //  console.log("containerOpenClose", containerOpenClose)
+               // console.log("existeTables",containerExisteTables)
+        } catch (err) {
+            if (err)
+                res.status(404).send("Cannot retrieve data");
+        }
+
+
+    }
+
+    async function getTurnoversRestraunts() {
+
+        if (!req.body.RestaurantId) return res.status(400).json({ 'message': 'RestaurantId ID required.' });
+
+        try {
+
+            const TurnoversRestraunts = await Restaurant.findByPk(RestaurantId = req.body.RestaurantId, { include: 'turnovers' })
+            // res.status(200).json(tablesblocked);
+            containerGetTurnoverRestaurant = TurnoversRestraunts.turnovers
+
+            // res.status(200).json(containerGetTurnoverRestaurant);
+arrayTurnvoers =containerGetTurnoverRestaurant
+      
+         arrayTurnvoers.forEach((value) => {
+
+      if (value.taille === req.body.guestnumber){
+     timeend =   moment(req.body.startTime)
+     .add(value.minutes, 'minutes')
+
+
+      console.log("marco ",timeend)
+  
+      }
+      
+        })
+      
+        } catch (err) {
+            if (err)
+                res.status(404).send("Cannot retrieve data");
+        }
+    }
+    async function getTurnoversReservations() {
+       
+        
+        try {
+            // let date = new Date(req.body.startTime);
+            // let day = date.toLocaleString('en-us', {weekday: 'long'});
+            // // console.log("ffffffffff",day);
+            const TurnoverReservations = await Restaurant.findByPk(RestaurantId = req.body.RestaurantId, { include: 'tolerancereservations'})
+            // res.status(200).json(tablesblocked);
+          
+            // TablesInBook= containerOpenClose
+            // res.status(200).json(containerExisteTables);
+            // containerOpenClose = OpenClose.daysworks
+     
+                // console.log("asynco", req.body.startTime)
+           
+   
+   containerTurnoverReservations = TurnoverReservations.tolerancereservations
+   arrayTurnoverReservations = containerTurnoverReservations
+
+   arrayTurnoverReservations.forEach((value) => {
+ 
+
+    console.log("arrayTurnoverReservations ",value.minutes)
+endtimefinal = moment(timeend)
+.add(value.minutes, 'minutes').format("YYYY-MM-DD HH:mm:ss")
+ 
+ 
+    
+      })
+              
+        } catch (err) {
+            if (err)
+                res.status(404).send("Cannot retrieve data");
+        }
+
+
+    } 
+    async function getExistesTables() {
+       
+        if (!req.body.RestaurantId) return res.status(400).json({ 'message': 'RestaurantId ID required.' });
+
+        try {
+          
+            const ExistesTables = await Restaurant.findByPk(RestaurantId = req.body.RestaurantId, { include: 'table' })
+            // res.status(200).json(tablesblocked);
+
+
+            containerExisteTables = ExistesTables.table
+            containerExisteTables.forEach((value) => {
+
+                containerTableNbrPx.push({'id': value.id, 'ids': value.ids, 'tableNbrPx': value.tableNbrPx, 'tolerance': value.tolerance,  RestaurantId: req.body.RestaurantId,
+                guestnumber: req.body.guestnumber,
+                timebook: req.body.timebook,
+                startTime:req.body.startTime,
+                endTime:endtimefinal  ,id_reservation:idReservation  });
+
+            })
+            containerExisteTables.forEach((value) => {
+
+                var iz
+                var hh = []
+                out.push({ 'id': value.id,'ids': value.ids, 'tolerance': Array.from(Array(value.tolerance), (_, x) => x + 1), 'tableNbrPx': value.tableNbrPx,  RestaurantId: req.body.RestaurantId,
+                guestnumber: req.body.guestnumber,
+                timebook: req.body.timebook,
+                startTime:req.body.startTime,
+                endTime:endtimefinal ,id_reservation:idReservation  });
+
+            })
+            // // res.status(200).json(ObjecTTablesdispo);
+
+            out.forEach((value) => {
+                var i
+              
+
+                    FinalarraywithCompmeteSansTolerance.push({ 'id': value.id,'ids': value.ids, 'tableNbrPx':  value.tableNbrPx,  RestaurantId: req.body.RestaurantId,
+                    guestnumber: req.body.guestnumber,
+                    timebook: req.body.timebook,
+                    startTime:req.body.startTime,
+                    endTime:endtimefinal ,id_reservation:idReservation  })
+
+                
+            })
+            out.forEach((value) => {
+                var i
+                for (i = 0; i < value.tolerance.length; i++) {
+
+                    FinalarraywithCompmeteToleranceplus.push({ 'id': value.id,'ids': value.ids, 'tableNbrPx': value.tolerance[i] + value.tableNbrPx,  RestaurantId: req.body.RestaurantId,
+                    guestnumber: req.body.guestnumber,
+                    timebook: req.body.timebook,
+                    startTime:req.body.startTime,
+                    endTime:endtimefinal ,id_reservation:idReservation  })
+
+                }
+            })
+            out.forEach((value) => {
+                var im
+                for (im = 0; im < value.tolerance.length; im++) {
+
+
+                    FinalarraywithCompmeteToleranceminus.push({ 'id': value.id,'ids': value.ids, 'tableNbrPx': value.tableNbrPx - value.tolerance[im],  RestaurantId: req.body.RestaurantId,
+                    guestnumber: req.body.guestnumber,
+                    timebook: req.body.timebook,
+                    startTime:req.body.startTime,
+                    endTime:endtimefinal,id_reservation:idReservation })
+                }
+            })
+
+            // console.log("FinalarraywithCompmeteTolerance",FinalarraywithCompmeteTolerance)
+
+    
+
+
+                //     var i
+                // var iz
+                //        out .push( Array.from(Array( value.tolerance), (_, x) => x));
+
+                //    for (i = 0; i < out.length;i++) {
+                //     console.log("out[i][iz] out[i][iz]",value.ids, out[i])
+                //     for (iz = 0; iz < out[i].length;iz++) {
+                    FinalarraywithCompmeteSansTolerance.forEach((value115) => {
+                if (req.body.guestnumber == value115.tableNbrPx) {
+
+                    try {
+
+                        arraytbalesSnasTolernace.push(value115)
+
+                        // var arraytbalesSnasTolernace =[]
+                        // arraytbalesSnasTolernace.push(value)
+                        // res.status(200).json(tablesblocked);
+
+                        // // res.status(200).json(ObjecTTablesdispo);
+                        console.log("sans tolerrnace", value115.ids)
+                 
+
+
+                    } catch (err) {
+                        if (err)
+
+                            res.status(404).send("Cannot retrieve Sans Tolernace");
+                    }
+
+
+
+
+
+
+                    // } else
+                    // console.log("FinalarraywithCompmeteToleranceFinalarraywithCompmeteTolerance",FinalarraywithCompmeteTolerance)
+                    // var is
+                    //     for (is = 0; is < FinalarraywithCompmeteTolerance.length;is++) {
+                    //     console.log("FinalarraywithCompmeteTolerance",FinalarraywithCompmeteTolerance[is])
+
+                }
+            })
+        
+            FinalarraywithCompmeteToleranceplus.forEach((value11) => {
+                // console.log("valuevaluevalue", value11)
+
+
+                if (req.body.guestnumber == value11.tableNbrPx) {
+
+                    try {
+                        arraytbalesWithTolernacePlus.push(value11)
+                        // console.log("+ tolerrnace", value11)
+
+
+                    } catch (err) {
+                        if (err)
+                            res.status(404).send("Cannot retrieve Sans Tolernace");
+                    }
+                }
+
+
+
+            })
+            FinalarraywithCompmeteToleranceminus.forEach((value12) => {
+                // console.log("valuevaluevalueMinus", value12.tableNbrPx)
+                if
+
+                    (req.body.guestnumber == value12.tableNbrPx) {
+                    try {
+                        arraytbalesWithTolernaceMinus.push(value12)
+                        // console.log("- tolerrnace", value12.ids)
+                    }
+
+
+                    catch (err) {
+                        if (err)
+                            res.status(404).send("Cannot retrieve Sans Tolernace");
+                    }
+
+
+
+                    // }
+                }
+            })
+
+
+
+
+
+            function CollageSansTolerance() {
+                var datacollage =[]
+                datacollage = subsetSum(containerTableNbrPx, req.body.guestnumber);
+             
+
+                datacollage.forEach((element, index, array) => {
+                   if(element.length >1 ){
+
+                    arraytablesCollageSansTolerance.push(element)
+
+                   }
+
+                    // testelemnt.push(element)
+
+                })
+                // console.log("cha3ab",arraytablesCollageSansTolerance)
+                return arraytablesCollageSansTolerance
+            }
+
+
+            function CollageTolerancePlus() {
+                // console.log("111111outoutoutoutoutoutout", out)
+                var dd = []
+                var ddfinal = []
+                var dataplus
+                var test = []
+                out.forEach((element, index, array) => {
+                    var ih
+                    for (ih = 0; ih < element.tolerance.length; ih++) {
+                        // console.log("11111", element.tolerance[ih] + element.tableNbrPx, "id", element.ids, "nbrpersonne", element.tableNbrPx); // 100, 200, 300
+                        dd.push({ 'id': element.id,  'ids': element.ids, 'tableNbrPx': element.tolerance[ih] + element.tableNbrPx,  RestaurantId: req.body.RestaurantId,
+                        guestnumber: req.body.guestnumber,
+                        timebook: req.body.timebook,
+                        startTime:req.body.startTime,
+                        endTime:endtimefinal
+                        ,id_reservation:idReservation  });
+                        // console.log("22222",index); // 0, 1, 2
+                        // same myArray object 3 times
+                    }
+                });
+                // console.log("+++++++++++dddd",subsetSum(dd, req.body.guestnumber));
+                dataplus = subsetSum(dd, req.body.guestnumber)
+                dataplus.forEach((element, index, array) => {
+
+
+                    test.push(element)
+
+                })
+                var ihd
+                var testelemnt = []
+                for (ihd = 0; ihd < test.length; ihd++) {
+
+                    // console.log("eeeeeeeee",test[ihd])
+                    test[ihd].forEach((element, index, array) => {
+                        //  console.log(element.ids )
+
+                        testelemnt.push(element)
+
+                    })
+                    var valueArr = testelemnt.map(function (item) { return item.ids });
+                    var isDuplicate = valueArr.some(function (item, idx) {
+                        return valueArr.indexOf(item) != idx
+                    });
+
+                    if ((!isDuplicate) && (testelemnt.length > 1)) {
+                        // console.log("oups", isDuplicate, testelemnt.length);
+                        arraytablesCollageWithTolerancePlus.push(testelemnt)
+                    }
+                    testelemnt = []
+
+                
+
+                }
+
+         
+                return arraytablesCollageWithTolerancePlus
+            }
+
+            function CollageToleranceMinus() {
+                // console.log("111111outoutoutoutoutoutout", out)
+                var dd = []
+                var ddfinal = []
+                var dataminus
+                var test = []
+                var dataclean = []
+                out.forEach((element, index, array) => {
+                    var ih
+                    for (ih = 0; ih < element.tolerance.length; ih++) {
+                        // console.log("11111", element.tableNbrPx - element.tolerance[ih], "id", element.ids, "nbrpersonne", element.tableNbrPx); // 100, 200, 300
+                        dd.push({ 'id': element.id,   'ids': element.ids, 'tableNbrPx': element.tableNbrPx - element.tolerance[ih], RestaurantId: req.body.RestaurantId,
+                        guestnumber: req.body.guestnumber,
+                        timebook: req.body.timebook,
+                        startTime:req.body.startTime,
+                        endTime:endtimefinal ,id_reservation:idReservation  });
+                        // console.log("22222",index); // 0, 1, 2
+                        // same myArray object 3 times
+                    }
+                });
+                // console.log("+++++++++++dddd",subsetSum(dd, req.body.guestnumber));
+
+
+                var ihc
+                for (ihc = 0; ihc < dd.length; ihc++) {
+                    // console.log("karak", dd[ihc].tableNbrPx === 0)
+                    if (dd[ihc].tableNbrPx != 0) {
+
+                        dataclean.push(dd[ihc])
+                    }
+
+                }
+
+                dataminus = subsetSum(dataclean, req.body.guestnumber)
+                dataminus.forEach((element, index, array) => {
+
+
+                    test.push(element)
+
+                })
+                var ihd
+                var testelemnt = []
+                for (ihd = 0; ihd < test.length; ihd++) {
+
+                    // console.log("eeeeeeeee",test[ihd])
+                    test[ihd].forEach((element, index, array) => {
+                        //  console.log(element.ids )
+
+                        testelemnt.push(element)
+
+                    })
+                    var valueArr = testelemnt.map(function (item) { return item.ids });
+                    var isDuplicate = valueArr.some(function (item, idx) {
+                        return valueArr.indexOf(item) != idx
+                    });
+
+                    if ((!isDuplicate) && (testelemnt.length > 1)) {
+                        // console.log("oupsMinus", isDuplicate, testelemnt);
+                        arraytablesCollageWithToleranceMinus.push(testelemnt)
+                    }
+                    testelemnt = []
+
+                    // console.log("eeeeeeeee",test[ihd+1])
+                    // test[ihd+1].forEach((element, index, array) => {
+                    //     testelemnt = []
+                    //     testelemnt.push(element)
+
+
+                    //                 })
+
+
+                    //                 var valueArr = testelemnt.map(function(item){ return item.ids });
+                    //                 var isDuplicate = valueArr.some(function(item, idx){ 
+                    //                     return valueArr.indexOf(item) != idx 
+                    //                 });
+                    //                 console.log(isDuplicate);
+
+
+                }
+
+
+                return arraytablesCollageWithToleranceMinus;
+            }
+            function CollageTolerancePlusMinus() {
+                // console.log("111111outoutoutoutoutoutout", out)
+                var ddplus = []
+                var ddminus = []
+                var ddfinal = []
+                var dataplus
+                var dataclean = []
+                var test = []
+                out.forEach((element, index, array) => {
+                    var ih
+                    for (ih = 0; ih < element.tolerance.length; ih++) {
+                        // console.log("11111", element.tolerance[ih] + element.tableNbrPx, "id", element.ids, "nbrpersonne", element.tableNbrPx); // 100, 200, 300
+                        ddplus.push({'id': element.id,    'ids': element.ids, 'tableNbrPx': element.tolerance[ih] + element.tableNbrPx ,  RestaurantId: req.body.RestaurantId,
+                        guestnumber: req.body.guestnumber,
+                        timebook: req.body.timebook,
+                        startTime:req.body.startTime,
+                        endTime:endtimefinal  ,id_reservation:idReservation });
+                        // console.log("22222",index); // 0, 1, 2
+                        // same myArray object 3 times
+                    }
+                });
+
+                out.forEach((element, index, array) => {
+                    var ih
+                    for (ih = 0; ih < element.tolerance.length; ih++) {
+                        // console.log("22222", element.tableNbrPx - element.tolerance[ih], "id", element.ids, "nbrpersonne", element.tableNbrPx); // 100, 200, 300
+                        ddminus.push({  'id': element.id,   'ids': element.ids, 'tableNbrPx': element.tableNbrPx - element.tolerance[ih], RestaurantId: req.body.RestaurantId,
+                        guestnumber: req.body.guestnumber,
+                        timebook: req.body.timebook,
+                        startTime:req.body.startTime,
+                        endTime:endtimefinal  ,id_reservation:idReservation });
+                        // console.log("22222",index); // 0, 1, 2
+                        // same myArray object 3 times
+                    }
+                });
+                // console.log("+++++++++++dddd",subsetSum(dd, req.body.guestnumber));
+
+                var arr3 = [...ddplus, ...ddminus];
+
+
+                var ihc
+                for (ihc = 0; ihc < arr3.length; ihc++) {
+                    //    console.log("karak", arr3[ihc].tableNbrPx === 0)
+                    if (arr3[ihc].tableNbrPx != 0) {
+
+                        dataclean.push(arr3[ihc])
+                    }
+
+                }
+
+                // console.log("oups",dataclean);
+                // console.log("datacleandatacleandatacleandataclean",dataclean)
+                dataplus = subsetSum(dataclean, req.body.guestnumber)
+
+                dataplus.forEach((element, index, array) => {
+
+
+                    test.push(element)
+
+                })
+                var ihd
+                var testelemnt = []
+                for (ihd = 0; ihd < test.length; ihd++) {
+
+                    // console.log("eeeeeeeee",test[ihd])
+                    test[ihd].forEach((element, index, array) => {
+                        //  console.log(element.ids )
+
+                        testelemnt.push(element)
+
+                    })
+                    var valueArr = testelemnt.map(function (item) { return item.ids });
+                    var isDuplicate = valueArr.some(function (item, idx) {
+                        return valueArr.indexOf(item) != idx
+                    });
+
+                    if ((!isDuplicate) && (testelemnt.length > 1)) {
+                        // console.log("oups", isDuplicate, testelemnt);
+                        arraytablesCollageWithTolerancePlusMinus.push(testelemnt)
+                    }
+                    testelemnt = []
+                }
+
+
+                return arraytablesCollageWithTolerancePlusMinus;
+            }
+            await CollageSansTolerance();
+            await CollageTolerancePlus();
+            await CollageToleranceMinus();
+            await CollageTolerancePlusMinus();
+           
+            var sss = []
+            var sss2 = []
+            var ttt = []
+            var ttt2 = []
+
+            // for (let re = 0; re <arraytablesCollageWithTolerancePlus.length; re++) {
+            //     if(arraytablesCollageWithTolerancePlus[re].length > 1){
+            //       sss.push( arraytablesCollageWithTolerancePlus[re] );
+
+            //     }
+            //       }
+            //       for (let r1e = 0; r1e < 5; r1e++) {
+            //         sss2.push(sss[r1e])
+            //           }
+
+
+            //  for (let r = 0; r <arraytablesCollageWithTolerancePlusMinus.length; r++) {
+            // if(arraytablesCollageWithTolerancePlusMinus[r].length > 1){
+            //   ttt .push( arraytablesCollageWithTolerancePlusMinus[r] );
+
+            // }
+            //   }
+            //   for (let r1 = 0; r1 < 5; r1++) {
+            //   ttt2.push(ttt[r1])
+            //       }
+
+
+
+
+            //       for (let i = 0; i < ttt2.length; ++i)
+            //     for (let j = 0; j < ttt2.length; ++j)
+            //         if (i !== j && ttt2[i].ids === ttt2[j].ids  )
+            //         ttt2.splice(j, 1);            
+            // console.log("frrr",ttt2);
+
+
+            // ObjecTTablesdispo = {
+            //     "1TableWithOutTolenace": arraytbalesSnasTolernace, "TolerancePlus": arraytbalesWithTolernacePlus,
+
+            //     "ToleranceMinus": arraytbalesWithTolernaceMinus, "CollageSansTolerance": arraytablesCollageSansTolerance,
+            //     "CollageWithTolerancePlus": arraytablesCollageWithTolerancePlus, "CollageWithToleranceMinus": arraytablesCollageWithToleranceMinus,
+            //     "CollageWithTolerancePlusMinus": arraytablesCollageWithTolerancePlusMinus
+            // }
+            // // ObjecTTablesdispo = Object.assign({}, arraytbalesSnasTolernace,arraytbalesWithTolernacePlus);
+            // res.status(200).json(ObjecTTablesdispo);
+        } catch (err) {
+            if (err)
+                res.status(404).send("Cannot retrieve data");
+
+        }
+
+    }
+
+
+    async function getExistesTablesInBook() {
+      
+                try {
+        
+                    const ExistesTables = await Restaurant.findByPk(RestaurantId = req.body.RestaurantId, { include: [{ model: BookWait, as: 'bookwaitseat' }] })
+                    // res.status(200).json(tablesblocked);
+                    containerExisteTables = ExistesTables.bookwaitseat
+                    TablesInBook= containerExisteTables
+                    // res.status(200).json(containerExisteTables);
+                    if (Object.keys(containerExisteTables).length === 0) {
+                        
+            ObjecTTablesdispo = {
+                "1TableWithOutTolenace": arraytbalesSnasTolernace, "TolerancePlus": arraytbalesWithTolernacePlus,
+
+                "ToleranceMinus": arraytbalesWithTolernaceMinus, "CollageSansTolerance": arraytablesCollageSansTolerance,
+                "CollageWithTolerancePlus": arraytablesCollageWithTolerancePlus, "CollageWithToleranceMinus": arraytablesCollageWithToleranceMinus,
+                "CollageWithTolerancePlusMinus": arraytablesCollageWithTolerancePlusMinus
+            }
+            // ObjecTTablesdispo = Object.assign({}, arraytbalesSnasTolernace,arraytbalesWithTolernacePlus);
+            res.status(200).json(ObjecTTablesdispo);
+                        // console.log("ajouter")
+        
+                        // BookWait.create(book)
+                        //     .then(book => {
+        
+                        //         if (book) {
+                        //             res.status(200).json(book)
+                        //            console.log("asynco", arrayTurnvoers)
+                        //         } else {
+                        //             res.send('book dont create ')
+        
+                        //         }
+                        //     }).catch(err => {
+                        //         res.send('errror: ')
+        
+                        //     })
+        
+                    } else {
+                     
+                        // console.log("asynco", req.body.startTime)
+        
+                        TablesInBook.forEach((value) => {
+                            // console.log("checkfff",arraytbalesWithTolernacePlus)
+                          
+        if (moment( value.debut).format("YYYY-MM-DD") === moment( req.body.startTime).format("YYYY-MM-DD") ){
+        
+            TablesInBookfilterByDate.push(value);
+        
+        }
+         
+                        })
+
+                   
+    // console.log("11seif", arraytbalesSnasTolernace)
+
+            // console.log("111gabon",value.id)
+     
+            function FinalSansTolerance(){
+                TablesInBookfilterByDate.forEach((value) => {
+                    arraytbalesSnasTolernace.forEach((valueSansTol) => {
+                        
+                  
+                        // console.log("222gabon",valueSansTol.id)
+                        
+                        if(value.id === valueSansTol.id ){
+                            var timestart = moment(req.body.startTime).format("YYYY-MM-DD HH:mm:ss")
+                            var timeend = moment(valueSansTol.endTime).format("YYYY-MM-DD HH:mm:ss")
+                            var beforeTime = moment(value.debut).format("YYYY-MM-DD HH:mm:ss")
+                            var afterTime = moment(value.fin).format("YYYY-MM-DD HH:mm:ss")
+                           
+                            // console.log("****1111", qq)
+                            // console.log("****22", tt)
+                            // console.log("****3333", dd)
+                            // console.log("****44444", ff)
+                            if (((timestart >= beforeTime) && (timestart <= afterTime)) || ((timeend >= beforeTime) && (timeend <= afterTime))) {
+            
+                                console.log(timestart, timeend, 'SAS------------*******is between', valueSansTol.id, beforeTime, afterTime)
+              
+                                FianlarraytbalesSansTolernace.push(valueSansTol)
+                             
+                              } else {
+              
+                                console.log(timestart, timeend, 'SAS--------------********is not between', valueSansTol.id, beforeTime, afterTime)
+                                // FianlarraytbalesSansTolernace.push(valueSansTol)
+                                // console.log("FianlarraytbalesSansTolernace", FianlarraytbalesSansTolernace)
+              
+                              }
+                            // console.log("bizerte",valueSansTol.id)
+                        } 
+                        // else if (value.id != valueSansTol.id ){
+            
+                        //     FianlarraytbalesSansTolernace.push(valueSansTol)
+                        // }
+
+                        if (FianlarraytbalesSansTolernace.length != 0){
+                        for (let i = 0; i < FianlarraytbalesSansTolernace.length; ++i){
+              
+                            for (let j = 0; j < arraytbalesSnasTolernace.length; ++j){
+                                console.log("arraytbaleytbalesWithTolernacePlusi",   FianlarraytbalesSansTolernace[i].id )
+                                console.log("arraytbaleytbalesWithTolernacePlusj",   arraytbalesSnasTolernace[j].id )
+                                if (JSON.stringify(FianlarraytbalesSansTolernace[i].id) == JSON.stringify(arraytbalesSnasTolernace[j].id)) {
+                                    arraytbalesSnasTolernace.splice(j, 1)
+                                    console.log("arraytbalesWithTolernacePlusarraytbalesWithTolernacePlus",  arraytbalesSnasTolernace )
+                              
+                                    break; 
+                                }
+            
+                      }}
+                    }else{
+
+                        arraytbalesSnasTolernace = arraytbalesSnasTolernace
+                    }
+            
+            
+                    })
+            
+                              })
+          
+                            }
+                            function FinalToelrancePlus(){
+                                TablesInBookfilterByDate.forEach((value) => {
+                                arraytbalesWithTolernacePlus.forEach((valueTolPlus) => {
+                                      
+                                    console.log("222gabon",valueTolPlus.id)
+                                    
+                                    if(value.id === valueTolPlus.id ){
+                                        var timestart = moment(req.body.startTime).format("YYYY-MM-DD HH:mm:ss")
+                                        var timeend = moment(valueTolPlus.endTime).format("YYYY-MM-DD HH:mm:ss")
+                                        var beforeTime = moment(value.debut).format("YYYY-MM-DD HH:mm:ss")
+                                        var afterTime = moment(value.fin).format("YYYY-MM-DD HH:mm:ss")
+                                       
+                                        // console.log("****1111", qq)
+                                        // console.log("****22", tt)
+                                        // console.log("****3333", dd)
+                                        // console.log("****44444", ff)
+                                        if (((timestart >= beforeTime) && (timestart <= afterTime)) || ((timeend >= beforeTime) && (timeend <= afterTime))) {
+                            
+                                            console.log(timestart, timeend, 'OOOOO------------*******is between', valueTolPlus.id, beforeTime, afterTime)
+                            
+                                            FinalarraytbalesWithTolernacePlus.push(valueTolPlus)
+                                       
+                                          } else {
+                            
+                                            console.log(timestart, timeend, '+OOOO--------------********is not between', valueTolPlus.id, beforeTime, afterTime)
+                                            // FinalarraytbalesWithTolernacePlus.push(valueTolPlus)
+                                          
+                            
+                                          }
+                            
+                                  
+                                          if (FinalarraytbalesWithTolernacePlus.length != 0){
+                                          for (let i = 0; i < FinalarraytbalesWithTolernacePlus.length; ++i){
+                                              
+                                            for (let j = 0; j < arraytbalesWithTolernacePlus.length; ++j){
+                                                console.log("arraytbaleytbalesWithTolernacePlusi",   FinalarraytbalesWithTolernacePlus[i].id )
+                                                console.log("arraytbaleytbalesWithTolernacePlusj",   arraytbalesWithTolernacePlus[j].id )
+                                                if (JSON.stringify(FinalarraytbalesWithTolernacePlus[i].id) == JSON.stringify(arraytbalesWithTolernacePlus[j].id)) {
+                                                    arraytbalesWithTolernacePlus.splice(j, 1)
+                                                    console.log("arraytbalesWithTolernacePlusarraytbalesWithTolernacePlus",  arraytbalesWithTolernacePlus )
+                                              
+                                                    break; 
+                                                }
+                            
+                                      }}
+                            
+                                    }else{
+                                        arraytbalesWithTolernacePlus=arraytbalesWithTolernacePlus
+                            
+                                    }
+                                        // console.log("bizerte",valueTolPlus.id)
+                                    } 
+                                    // else if (value.id != valueTolPlus.id ){
+                            
+                                    //     FinalarraytbalesWithTolernacePlus.push(valueTolPlus)
+                                    // }
+                            
+                            
+                            
+                                })
+                                  
+                                          })
+                                      
+                            
+                            }
+                            
+       
+            function FinalToelranceMinus(){
+                // console.log("11122valueTolMinus2gabon",arraytbalesWithTolernaceMinus)
+                TablesInBookfilterByDate.forEach((value) => {
+                  arraytbalesWithTolernaceMinus.forEach((valueTolMinus) => {
+                    console.log("222211122valueTolMinus2gabon",valueTolMinus)
+            
+                    
+                    if(value.id === valueTolMinus.id ){
+                        var timestart = moment(req.body.startTime).format("YYYY-MM-DD HH:mm:ss")
+                        var timeend = moment(valueTolMinus.endTime).format("YYYY-MM-DD HH:mm:ss")
+                        var beforeTime = moment(value.debut).format("YYYY-MM-DD HH:mm:ss")
+                        var afterTime = moment(value.fin).format("YYYY-MM-DD HH:mm:ss")
+                       
+                        // console.log("****1111", qq)
+                        // console.log("****22", tt)
+                        // console.log("****3333", dd)
+                        // console.log("****44444", ff)
+                        if (((timestart >= beforeTime) && (timestart <= afterTime)) || ((timeend >= beforeTime) && (timeend <= afterTime))) {
+        
+                            console.log(timestart, timeend, '------------*******is between', valueTolMinus.id, beforeTime, afterTime)
+          
+                            FinalarraytbalesWithTolernaceMinus.push(valueTolMinus)
+                            console.log("FinalarraytbalesWithTolernaceMinus",  FinalarraytbalesWithTolernaceMinus )
+                          } else {
+          
+                            console.log(timestart, timeend, '--------------********is not between', valueTolMinus.id, beforeTime, afterTime)
+                    
+                      
+          
+                     
+                        
+                    } 
+                    if (FinalarraytbalesWithTolernaceMinus.length != 0){
+                        for (let i = 0; i < FinalarraytbalesWithTolernaceMinus.length; ++i){
+                            
+                          for (let j = 0; j < arraytbalesWithTolernaceMinus.length; ++j){
+                              console.log("arraytbaleytbalesWithTolernacePlusi",   FinalarraytbalesWithTolernaceMinus[i].id )
+                              console.log("arraytbaleytbalesWithTolernacePlusj",   arraytbalesWithTolernaceMinus[j].id )
+                              if (JSON.stringify(FinalarraytbalesWithTolernaceMinus[i].id) == JSON.stringify(arraytbalesWithTolernaceMinus[j].id)) {
+                                arraytbalesWithTolernaceMinus.splice(j, 1)
+                                  console.log("arraytbalesWithTolernacePlusarraytbalesWithTolernacePlus",  arraytbalesWithTolernaceMinus )
+                            
+                                  break; 
+                              }
+          
+                    }}
+          
+                  }else{
+                    arraytbalesWithTolernaceMinus=arraytbalesWithTolernaceMinus
+          
+                  }
+                    // else if (value.id != valueTolMinus.id ){
+        
+                    //     FinalarraytbalesWithTolernaceMinus.push(valueTolMinus)
+                     }
+        
+        
+        
+        
+                          })
+
+                   
+              
+        
+                })
+            }
+
+              
+             function Finalcollages (){
+                 var testDD=[]
+                 var testVV=[]
+                // console.log("testtttt",TablesInBookfilterByDate)   
+//console.log("arraytablesCollageSansTolerance",arraytablesCollageSansTolerance)  
+          TablesInBookfilterByDate.forEach((value) => {
+                    // arraytablesCollageSansTolerance.forEach((element) => {
+                    
+                     
+                    //     testtttt.push(element);
+                     
+                    // })
+
+                    for (let i = 0; i < arraytablesCollageSansTolerance.length; ++i){
+                        // console.log("testtttt[i]testtttt[i]",testtttt[i])
+                        arraytablesCollageSansTolerance[i].forEach((element15555, index1, array) => {
+                   
+                            testDD=array
+                         
+                      
+                        
+                        })
+
+                         
+                        testDD.forEach((element15, index1, array55) => {
+                            // console.log("vvvvvvvvvv",element15);  
+                            if(element15.id === value.id){
+                                var timestart = moment(req.body.startTime).format("YYYY-MM-DD HH:mm:ss")
+                                            var timeend = moment(element15.endTime).format("YYYY-MM-DD HH:mm:ss")
+                                            var beforeTime = moment(value.debut).format("YYYY-MM-DD HH:mm:ss")
+                                            var afterTime = moment(value.fin).format("YYYY-MM-DD HH:mm:ss")
+                                           
+                                            // console.log("****1111", qq)
+                                            // console.log("****22", tt)
+                                            // console.log("****3333", dd)
+                                            // console.log("****44444", ff)
+                                            if (((timestart >= beforeTime) && (timestart <= afterTime)) || ((timeend >= beforeTime) && (timeend <= afterTime))) {
+                                
+                                                console.log(timestart, timeend, 'kadha*********/*/*/Collage------------*******is between',   array55      ,"1551115555",index1, beforeTime, afterTime)
+                                // console.log("***************************/*/*/*/0,",testtttt[i].splice(i, 1))
+                                
+                                timeNOTokCollageSansTolerance.push(array55)
+                                
+                                //  console.log("dali",timeNOTokCollageSansTolerance);             // FinalarraytablesCollageSansTolerance.push( testtttt[i].splice(i, 1))
+                                           
+                                              } else {
+                                
+                                                console.log(timestart, timeend, 'flousARRmenFFFEstbded**************Collage--------------********is not between',array55 ,"good@@@@@index" , beforeTime, afterTime)
+                                                // FinalarraytablesCollageSansTolerance.push(testtttt[i])
+                                          
+                                
+                                              }
+
+                                // console.log("valuevaluevalue",value.debut);
+                                // console.log("ddddd",element15.startTime,array55);
+                                // testVV.push(array55)
+ 
+ }
+                             })
+                  
+                       
+                            
+// if (timeNOTokCollageSansTolerance.length != 0){
+//     // console.log("11timeNOTokCollageSansTolerancetimeNOTokCollageSansTolerance",timeNOTokCollageSansTolerance)
+//                   for (let i = 0; i < timeNOTokCollageSansTolerance.length; ++i){
+//                 for (let j = 0; j < arraytablesCollageSansTolerance.length; ++j){
+//                     if (JSON.stringify(timeNOTokCollageSansTolerance[i]) == JSON.stringify(arraytablesCollageSansTolerance[j])) {
+//                         arraytablesCollageSansTolerance.splice(j, 1);
+//                         console.log("nouwaeb",arraytablesCollageSansTolerance)
+                        
+//                     }
+
+//           }}
+//         }else{
+         
+//         }
+ 
+
+
+
+                    }
+                  
+               
+// for (let i = 0; i < testtttt.length; ++i){
+//     // console.log("testtttt[i]testtttt[i]",testtttt[i])
+   
+
+//     testtttt[i].forEach((element15, index1, array) => {
+
+                
+//         if(value.id === element15.id ){
+//             var timestart = moment(req.body.startTime).format("YYYY-MM-DD HH:mm:ss")
+//             var timeend = moment(element15.endTime).format("YYYY-MM-DD HH:mm:ss")
+//             var beforeTime = moment(value.debut).format("YYYY-MM-DD HH:mm:ss")
+//             var afterTime = moment(value.fin).format("YYYY-MM-DD HH:mm:ss")
+           
+//             // console.log("****1111", qq)
+//             // console.log("****22", tt)
+//             // console.log("****3333", dd)
+//             // console.log("****44444", ff)
+//             if (((timestart >= beforeTime) && (timestart <= afterTime)) || ((timeend >= beforeTime) && (timeend <= afterTime))) {
+
+//                 console.log(timestart, timeend, 'kadha*********/*/*/Collage------------*******is between',   array      ,"1551115555",index1, beforeTime, afterTime)
+// // console.log("***************************/*/*/*/0,",testtttt[i].splice(i, 1))
+
+// timeNOTokCollageSansTolerance.push(array)
+
+//                 // FinalarraytablesCollageSansTolerance.push( testtttt[i].splice(i, 1))
+           
+//               } else {
+
+//                 console.log(timestart, timeend, 'flousARRmenFFFEstbded**************Collage--------------********is not between',array ,"good@@@@@index",i, beforeTime, afterTime)
+//                 // FinalarraytablesCollageSansTolerance.push(testtttt[i])
+          
+
+//               }
+            
+//         }
+      
+//         // else if (value.id != element15.id ){
+
+//         //     FinalarraytablesCollageSansTolerance.push(element15)
+//         // }
+
+
+
+
+              
+
+       
+       
+//     })
+
+// }
+
+
+
+                })
+                console.log("cameroojun",timeNOTokCollageSansTolerance); 
+
+
+                if (timeNOTokCollageSansTolerance.length != 0){
+    // console.log("11timeNOTokCollageSansTolerancetimeNOTokCollageSansTolerance",timeNOTokCollageSansTolerance)
+                  for (let i = 0; i < timeNOTokCollageSansTolerance.length; ++i){
+                for (let j = 0; j < arraytablesCollageSansTolerance.length; ++j){
+                    if (JSON.stringify(timeNOTokCollageSansTolerance[i]) == JSON.stringify(arraytablesCollageSansTolerance[j])) {
+                        arraytablesCollageSansTolerance.splice(j, 1);
+                        console.log("wledna",arraytablesCollageSansTolerance)
+                        
+                    }
+
+          }}
+        }else{
+            arraytablesCollageSansTolerance=arraytablesCollageSansTolerance
+        }
+ 
+            }
+          
+            function FinalcollagesPlus (){
+                var testDDplus=[]
+                var testVV=[]
+    
+         TablesInBookfilterByDate.forEach((value) => {
+            // arraytablesCollageWithTolerancePlus.forEach((element) => {
+                   
+                    
+            //            testttttplus.push(element);
+                    
+            //        })
+
+                   for (let i = 0; i < arraytablesCollageWithTolerancePlus.length; ++i){
+                        
+                    arraytablesCollageWithTolerancePlus[i].forEach((element15555, index1, array) => {
+                  
+                        testDDplus=array
+                        
+                     
+                       
+                       })
+
+                        
+                       testDDplus.forEach((element15, index1, array55) => {
+                         
+                           if(element15.id === value.id){
+                               var timestart = moment(req.body.startTime).format("YYYY-MM-DD HH:mm:ss")
+                                           var timeend = moment(element15.endTime).format("YYYY-MM-DD HH:mm:ss")
+                                           var beforeTime = moment(value.debut).format("YYYY-MM-DD HH:mm:ss")
+                                           var afterTime = moment(value.fin).format("YYYY-MM-DD HH:mm:ss")
+                                   
+                                           if (((timestart >= beforeTime) && (timestart <= afterTime)) || ((timeend >= beforeTime) && (timeend <= afterTime))) {
+                               
+                                               console.log(timestart, timeend, 'kadha*********/*/*/Collage------------*******is between',   array55      ,"1551115555",index1, beforeTime, afterTime)
+                              
+                               
+                                               timeNOTokCollagePlusTolerance.push(array55)
+                               
+                                           
+                                             } else {
+                               
+                                               console.log(timestart, timeend, 'flousARRmenFFFEstbded**************Collage--------------********is not between',array55 ,"good@@@@@index" , beforeTime, afterTime)
+                                               // FinalarraytablesCollageSansTolerance.push(testtttt[i])
+                                         
+                               
+                                             }
+
+                              
+}
+                            })
+                 
+                      
+    
+
+
+                   }
+                 
+        
+
+ 
+
+
+               })
+         
+
+
+               if (timeNOTokCollagePlusTolerance.length != 0){
+   // console.log("11timeNOTokCollageSansTolerancetimeNOTokCollageSansTolerance",timeNOTokCollageSansTolerance)
+                 for (let i = 0; i < timeNOTokCollagePlusTolerance.length; ++i){
+               for (let j = 0; j < arraytablesCollageWithTolerancePlus.length; ++j){
+                   if (JSON.stringify(timeNOTokCollagePlusTolerance[i]) == JSON.stringify(arraytablesCollageWithTolerancePlus[j])) {
+                    arraytablesCollageWithTolerancePlus.splice(j, 1);
+                       console.log("wledna",arraytablesCollageWithTolerancePlus)
+                       
+                   }
+
+         }}
+       }else{
+        arraytablesCollageWithTolerancePlus=arraytablesCollageWithTolerancePlus
+       }
+
+           }
+           
+           function FinalcollagesMinus (){
+            var testDDMinus=[]
+            var testVV=[]
+
+     TablesInBookfilterByDate.forEach((value) => {
+       
+
+               for (let i = 0; i < arraytablesCollageWithToleranceMinus.length; ++i){
+                    
+                arraytablesCollageWithToleranceMinus[i].forEach((element15555, index1, array) => {
+              
+                    testDDMinus=array
+                    
+                 
+                   
+                   })
+
+                    
+                   testDDMinus.forEach((element15, index1, array55) => {
+                     
+                       if(element15.id === value.id){
+                           var timestart = moment(req.body.startTime).format("YYYY-MM-DD HH:mm:ss")
+                                       var timeend = moment(element15.endTime).format("YYYY-MM-DD HH:mm:ss")
+                                       var beforeTime = moment(value.debut).format("YYYY-MM-DD HH:mm:ss")
+                                       var afterTime = moment(value.fin).format("YYYY-MM-DD HH:mm:ss")
+                               
+                                       if (((timestart >= beforeTime) && (timestart <= afterTime)) || ((timeend >= beforeTime) && (timeend <= afterTime))) {
+                           
+                                           console.log(timestart, timeend, 'kadha*********/*/*/Collage------------*******is between',   array55      ,"1551115555",index1, beforeTime, afterTime)
+                          
+                           
+                                           timeNOTokCollageMinusTolerance.push(array55)
+                           
+                                       
+                                         } else {
+                           
+                                           console.log(timestart, timeend, 'flousARRmenFFFEstbded**************Collage--------------********is not between',array55 ,"good@@@@@index" , beforeTime, afterTime)
+                                           // FinalarraytablesCollageSansTolerance.push(testtttt[i])
+                                     
+                           
+                                         }
+
+                          
+}
+                        })
+             
+                  
+
+
+
+               }
+             
+    
+
+
+
+
+           })
+        
+
+
+           if (timeNOTokCollageMinusTolerance.length != 0){
+// console.log("11timeNOTokCollageSansTolerancetimeNOTokCollageSansTolerance",timeNOTokCollageSansTolerance)
+             for (let i = 0; i < timeNOTokCollageMinusTolerance.length; ++i){
+           for (let j = 0; j < arraytablesCollageWithToleranceMinus.length; ++j){
+               if (JSON.stringify(timeNOTokCollageMinusTolerance[i]) == JSON.stringify(arraytablesCollageWithToleranceMinus[j])) {
+                arraytablesCollageWithToleranceMinus.splice(j, 1);
+                   console.log("wledna",arraytablesCollageWithToleranceMinus)
+                   
+               }
+
+     }}
+   }else{
+    arraytablesCollageWithToleranceMinus=arraytablesCollageWithToleranceMinus
+   }
+
+       }
+        
+       function FinalcollagesPlusMinus (){
+        var testDDPlusMinus=[]
+        var testVV=[]
+
+ TablesInBookfilterByDate.forEach((value) => {
+           
+           for (let i = 0; i < arraytablesCollageWithTolerancePlusMinus.length; ++i){
+                
+            arraytablesCollageWithTolerancePlusMinus[i].forEach((element15555, index1, array) => {
+          
+                testDDPlusMinus=array
+                
+             
+               
+               })
+
+                
+               testDDPlusMinus.forEach((element15, index1, array55) => {
+                 
+                   if(element15.id === value.id){
+                       var timestart = moment(req.body.startTime).format("YYYY-MM-DD HH:mm:ss")
+                                   var timeend = moment(element15.endTime).format("YYYY-MM-DD HH:mm:ss")
+                                   var beforeTime = moment(value.debut).format("YYYY-MM-DD HH:mm:ss")
+                                   var afterTime = moment(value.fin).format("YYYY-MM-DD HH:mm:ss")
+                           
+                                   if (((timestart >= beforeTime) && (timestart <= afterTime)) || ((timeend >= beforeTime) && (timeend <= afterTime))) {
+                       
+                                       console.log(timestart, timeend, 'kadha*********/*/*/Collage------------*******is between',   array55      ,"1551115555",index1, beforeTime, afterTime)
+                      
+                       
+                       timeNOTokCollagePlusMinusTolerance.push(array55)
+                       
+                                   
+                                     } else {
+                       
+                                       console.log(timestart, timeend, 'flousARRmenFFFEstbded**************Collage--------------********is not between',array55 ,"good@@@@@index" , beforeTime, afterTime)
+                                       // FinalarraytablesCollageSansTolerance.push(testtttt[i])
+                                 
+                       
+                                     }
+
+                      
+}
+                    })
+         
+              
+
+
+
+           }
+         
+
+
+
+
+
+       })
+   
+
+
+       if (timeNOTokCollagePlusMinusTolerance.length != 0){
+// console.log("11timeNOTokCollageSansTolerancetimeNOTokCollageSansTolerance",timeNOTokCollageSansTolerance)
+         for (let i = 0; i < timeNOTokCollagePlusMinusTolerance.length; ++i){
+       for (let j = 0; j < arraytablesCollageWithTolerancePlusMinus.length; ++j){
+           if (JSON.stringify(timeNOTokCollagePlusMinusTolerance[i]) == JSON.stringify(arraytablesCollageWithTolerancePlusMinus[j])) {
+            arraytablesCollageWithTolerancePlusMinus.splice(j, 1);
+               console.log("wledna",arraytablesCollageWithTolerancePlusMinus)
+               
+           }
+
+ }}
+}else{
+    arraytablesCollageWithTolerancePlusMinus=arraytablesCollageWithTolerancePlusMinus
+}
+
+   }
+    
+                    }
+                        
+            function FinalSansTolerance(){
+                TablesInBookfilterByDate.forEach((value) => {
+                    arraytbalesSnasTolernace.forEach((valueSansTol) => {
+                        
+                  
+                        // console.log("222gabon",valueSansTol.id)
+                        
+                        if(value.id === valueSansTol.id ){
+                            var timestart = moment(req.body.startTime).format("YYYY-MM-DD HH:mm:ss")
+                            var timeend = moment(valueSansTol.endTime).format("YYYY-MM-DD HH:mm:ss")
+                            var beforeTime = moment(value.debut).format("YYYY-MM-DD HH:mm:ss")
+                            var afterTime = moment(value.fin).format("YYYY-MM-DD HH:mm:ss")
+                           
+                            // console.log("****1111", qq)
+                            // console.log("****22", tt)
+                            // console.log("****3333", dd)
+                            // console.log("****44444", ff)
+                            if (((timestart >= beforeTime) && (timestart <= afterTime)) || ((timeend >= beforeTime) && (timeend <= afterTime))) {
+            
+                                console.log(timestart, timeend, 'SAS------------*******is between', valueSansTol.id, beforeTime, afterTime)
+              
+                                FianlarraytbalesSansTolernace.push(valueSansTol)
+                             
+                              } else {
+              
+                                console.log(timestart, timeend, 'SAS--------------********is not between', valueSansTol.id, beforeTime, afterTime)
+                                // FianlarraytbalesSansTolernace.push(valueSansTol)
+                                // console.log("FianlarraytbalesSansTolernace", FianlarraytbalesSansTolernace)
+              
+                              }
+                            // console.log("bizerte",valueSansTol.id)
+                        } 
+                        // else if (value.id != valueSansTol.id ){
+            
+                        //     FianlarraytbalesSansTolernace.push(valueSansTol)
+                        // }
+
+                        if (FianlarraytbalesSansTolernace.length != 0){
+                        for (let i = 0; i < FianlarraytbalesSansTolernace.length; ++i){
+              
+                            for (let j = 0; j < arraytbalesSnasTolernace.length; ++j){
+                                console.log("arraytbaleytbalesWithTolernacePlusi",   FianlarraytbalesSansTolernace[i].id )
+                                console.log("arraytbaleytbalesWithTolernacePlusj",   arraytbalesSnasTolernace[j].id )
+                                if (JSON.stringify(FianlarraytbalesSansTolernace[i].id) == JSON.stringify(arraytbalesSnasTolernace[j].id)) {
+                                    arraytbalesSnasTolernace.splice(j, 1)
+                                    console.log("arraytbalesWithTolernacePlusarraytbalesWithTolernacePlus",  arraytbalesSnasTolernace )
+                              
+                                    break; 
+                                }
+            
+                      }}
+                    }else{
+
+                        arraytbalesSnasTolernace = arraytbalesSnasTolernace
+                    }
+            
+            
+                    })
+            
+                              })
+          
+                            }
+                    await  FinalSansTolerance();
+                
+
+                    ObjecTTablesdispo = {
+                        arraytbalesSnasTolernace
+                           
+                        }
+                        // ObjecTTablesdispo = Object.assign({}, arraytbalesSnasTolernace,arraytbalesWithTolernacePlus);
+                        res.status(200).json(ObjecTTablesdispo);
+          
+       
+                    // console.log("existeTables",containerExisteTables)
+                } catch (err) {
+                    if (err)
+                        res.status(404).send("Cannot retrieve data");
+                }
+        
+        
+            }
+        
+ 
+        TablesInBookfilterByDate.forEach((value) => {
+            arraytbalesSnasTolernace.forEach((valueSansTol) => {
+                
+          
+                // console.log("222gabon",valueSansTol.id)
+                
+                if(value.id === valueSansTol.id ){
+                    var timestart = moment(req.body.startTime).format("YYYY-MM-DD HH:mm:ss")
+                    var timeend = moment(valueSansTol.endTime).format("YYYY-MM-DD HH:mm:ss")
+                    var beforeTime = moment(value.debut).format("YYYY-MM-DD HH:mm:ss")
+                    var afterTime = moment(value.fin).format("YYYY-MM-DD HH:mm:ss")
+                   
+                    // console.log("****1111", qq)
+                    // console.log("****22", tt)
+                    // console.log("****3333", dd)
+                    // console.log("****44444", ff)
+                    if (((timestart >= beforeTime) && (timestart <= afterTime)) || ((timeend >= beforeTime) && (timeend <= afterTime))) {
+    
+                        console.log(timestart, timeend, 'SAS------------*******is between', valueSansTol.id, beforeTime, afterTime)
+      
+                        FianlarraytbalesSansTolernace.push(valueSansTol)
+                     
+                      } else {
+      
+                        console.log(timestart, timeend, 'SAS--------------********is not between', valueSansTol.id, beforeTime, afterTime)
+                        // FianlarraytbalesSansTolernace.push(valueSansTol)
+                        // console.log("FianlarraytbalesSansTolernace", FianlarraytbalesSansTolernace)
+      
+                      }
+                    // console.log("bizerte",valueSansTol.id)
+                } 
+                // else if (value.id != valueSansTol.id ){
+    
+                //     FianlarraytbalesSansTolernace.push(valueSansTol)
+                // }
+
+                if (FianlarraytbalesSansTolernace.length != 0){
+                for (let i = 0; i < FianlarraytbalesSansTolernace.length; ++i){
+      
+                    for (let j = 0; j < arraytbalesSnasTolernace.length; ++j){
+                        console.log("arraytbaleytbalesWithTolernacePlusi",   FianlarraytbalesSansTolernace[i].id )
+                        console.log("arraytbaleytbalesWithTolernacePlusj",   arraytbalesSnasTolernace[j].id )
+                        if (JSON.stringify(FianlarraytbalesSansTolernace[i].id) == JSON.stringify(arraytbalesSnasTolernace[j].id)) {
+                            arraytbalesSnasTolernace.splice(j, 1)
+                            console.log("arraytbalesWithTolernacePlusarraytbalesWithTolernacePlus",  arraytbalesSnasTolernace )
+                      
+                            break; 
+                        }
+    
+              }}
+            }else{
+
+                arraytbalesSnasTolernace = arraytbalesSnasTolernace
+            }
+    
+    
+            })
+    
+                      })
+       
+    
+                      await   getRestaurantOpenClose();
+                      await   getTurnoversRestraunts();
+                      await   getTurnoversReservations();
+                      await   getExistesTables();
+                      await   getExistesTablesInBook();
+
+                      
+    function subsetSum(numbers, target) {
+
+        function iter(index, right, delta) {
+
+
+            if (!delta) return result.push(right);
+
+            if (index >= numbers.length) return;
+            if (delta - numbers[index].tableNbrPx >= 0)
+
+                iter(index + 1, [...right, numbers[index]], delta - numbers[index].tableNbrPx);
+
+            iter(index + 1, right, delta);
+
+        }
+
+        var result = [];
+        iter(0, [], target);
+
+        //    console.log("results",result)
+        return result;
+    }
+ 
+    function makeid(length) {
+        var result           = '';
+        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < length; i++ ) {
+          result += characters.charAt(Math.floor(Math.random() * 
+     charactersLength));
+       }
+       return result;
+    }
+            
+
+
+}
+
 
 //Create Reservation
 exports.CreateReservation = async (req, res) => {
@@ -1730,6 +3196,8 @@ endtimefinal = moment(timeend)
                     await  FinalcollagesMinus();
                     await  FinalcollagesPlusMinus();
 
+
+                    
                     ObjecTTablesdispo = {
                         "SansTolerance":arraytbalesSnasTolernace,    "TolerancePlus": arraytbalesWithTolernacePlus,"ToleranceMinus":arraytbalesWithTolernaceMinus,
                      "CollageSansTolerance": arraytablesCollageSansTolerance, "CollageWithTolerancePlus": arraytablesCollageWithTolerancePlus, "CollageWithToleranceMinus": arraytablesCollageWithToleranceMinus,
@@ -1737,7 +3205,8 @@ endtimefinal = moment(timeend)
                            
                         }
                         // ObjecTTablesdispo = Object.assign({}, arraytbalesSnasTolernace,arraytbalesWithTolernacePlus);
-                        res.status(200).json(ObjecTTablesdispo);
+                        
+                        res.status(200).json(ObjecTTablesdispo.filter(value => Object.keys(value).length !== 0));
           
        
                     // console.log("existeTables",containerExisteTables)
